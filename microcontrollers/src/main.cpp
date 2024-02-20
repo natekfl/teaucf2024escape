@@ -1,10 +1,10 @@
 #include <Arduino.h>
 #include <DeviceCommunication.h>
 
-void setup() {
-  DeviceCommunication::init();
+void setup()
+{
 }
 
-void loop() {
-  DeviceCommunication::tick();
+void loop()
+{
 }
