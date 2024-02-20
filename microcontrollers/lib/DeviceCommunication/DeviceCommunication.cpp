@@ -6,19 +6,23 @@
 char DeviceCommunication::packetBuffer[MAX_PACKET_BUFFER];
 int DeviceCommunication::packetBufferIdx = 0;
 
-void DeviceCommunication::init()
+void DeviceCommunication::init(char *ident)
 {
     Serial.begin(115200);
     while (!Serial)
     {
     } // wait for serial port to connect. Needed for native USB
-    Serial.println("IDENT=ROOM1PROJECTOR;");
+
+    // TODO Move to external func
+    char identPacket[MAX_PACKET_BUFFER];
+    sprintf(identPacket, "IDENT=%s;", ident);
+    Serial.println(identPacket);
 }
 
 void DeviceCommunication::tick()
 {
     readIntoBuffer();
-    parsePackets();
+    processPacketsFromBuffer();
 }
 
 void DeviceCommunication::readIntoBuffer()
@@ -30,18 +34,33 @@ void DeviceCommunication::readIntoBuffer()
     }
 }
 
-void DeviceCommunication::parsePackets()
+void DeviceCommunication::processPacketsFromBuffer()
 {
     char packet[MAX_PACKET_BUFFER];
-    size_t len = strcspn(packetBuffer, ";");
-    if (len < strlen(packetBuffer))
+    size_t idxOfSep = strcspn(packetBuffer, ";");
+    if (idxOfSep < strlen(packetBuffer))
     {
-        memcpy(packet, packetBuffer, len);
-        packet[len] = '\0';
-
-        Serial.println(packet); //TODO Handle Packet
-
-        memmove(packetBuffer, &packetBuffer[len + 1], MAX_PACKET_BUFFER-(len+1));
+        memcpy(packet, packetBuffer, idxOfSep);
+        packet[idxOfSep] = '\0';
+        memmove(packetBuffer, &packetBuffer[idxOfSep + 1], MAX_PACKET_BUFFER - (idxOfSep + 1));
         packetBufferIdx = 0;
+        processPacket(packet);
+    }
+}
+
+void DeviceCommunication::processPacket(char *packet)
+{
+    size_t idxOfSep = strcspn(packet, "=");
+    if (idxOfSep < strlen(packet))
+    {
+        char key[MAX_PACKET_BUFFER];
+        char value[MAX_PACKET_BUFFER];
+        strncpy(key, packet, idxOfSep);
+        strncpy(value, &packet[idxOfSep + 1], strlen(&packet[idxOfSep + 1]));
+        processProperty(key, value);
+    }
+    else
+    {
+        processCommand(packet);
     }
 }

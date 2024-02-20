@@ -6,7 +6,7 @@
 class DeviceCommunication
 {
 public:
-    static void init();
+    static void init(char *ident);
     static void tick();
 
 private:
@@ -14,7 +14,10 @@ private:
     static int packetBufferIdx;
 
     static void readIntoBuffer();
-    static void parsePackets();
+    static void processPacketsFromBuffer();
+    static void processPacket(char* packet);
+    static void processCommand(char* cmd);
+    static void processProperty(char* key, char* value);
 };
 
 #endif
