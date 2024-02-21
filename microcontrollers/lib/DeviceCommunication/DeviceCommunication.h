@@ -6,7 +6,7 @@
 class DeviceCommunication
 {
 public:
-    static void init(char *ident);
+    static void init(const char *ident);
     static void tick();
 
 private:

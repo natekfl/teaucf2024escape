@@ -6,7 +6,7 @@
 char DeviceCommunication::packetBuffer[MAX_PACKET_BUFFER];
 int DeviceCommunication::packetBufferIdx = 0;
 
-void DeviceCommunication::init(char *ident)
+void DeviceCommunication::init(const char *ident)
 {
     Serial.begin(115200);
     while (!Serial)
@@ -56,11 +56,26 @@ void DeviceCommunication::processPacket(char *packet)
         char key[MAX_PACKET_BUFFER];
         char value[MAX_PACKET_BUFFER];
         strncpy(key, packet, idxOfSep);
-        strncpy(value, &packet[idxOfSep + 1], strlen(&packet[idxOfSep + 1]));
+        key[idxOfSep] = '\0';
+        size_t valLen = strlen(&packet[idxOfSep + 1]);
+        strncpy(value, &packet[idxOfSep + 1], valLen);
+        value[valLen] = '\0';
         processProperty(key, value);
     }
     else
     {
         processCommand(packet);
     }
+}
+
+void DeviceCommunication::processCommand(char* cmd)
+{
+    Serial.println(cmd);
+}
+
+void DeviceCommunication::processProperty(char* key, char* value)
+{
+    Serial.print(key);
+    Serial.print(", ");
+    Serial.println(value);
 }
