@@ -87,5 +87,6 @@ export abstract class BaseDevice extends EventEmitter {
     destroySocket() {
         this.socket.destroy()
         this.detachSocket()
+        this.removeAllListeners()
     }
 }

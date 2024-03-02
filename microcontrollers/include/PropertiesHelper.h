@@ -44,15 +44,3 @@ public:                                                     \
     }
 
 #define ATTACH_PROPERTY(NAME) DeviceCommunication::addPropertyListener(#NAME, Properties::on##NAME##PropertyChange);
-
-struct Properties
-{
-    BOOL_PROPERTY(ENABLED)
-
-    static void init()
-    {
-        ATTACH_PROPERTY(ENABLED)
-    }
-};
-
-bool Properties::ENABLED = false;

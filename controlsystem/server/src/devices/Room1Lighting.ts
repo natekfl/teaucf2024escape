@@ -43,7 +43,7 @@ export class Room1LightingDevice extends BaseDevice {
     }
 
     triggerVideoEndCue() {
-        this.sendCommand("VIDEOSTARTCUE")
+        this.sendCommand("VIDEOENDCUE")
     }
 
     triggerDoorOpenCue() {

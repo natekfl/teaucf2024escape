@@ -101,7 +101,6 @@ void DeviceCommunication::processProperty(const char *key, const char *value)
         PropertyCallback *callback = propertyCallbacks[i];
         if (callback != NULL && strcmp(callback->key, key) == 0)
         {
-            Serial.println("calling");
             callback->func(value);
         }
     }

@@ -32,7 +32,23 @@ export class Room1ProjectorDevice extends BaseDevice {
     get videoTimestamp() { return this.#videoTimestamp }
 
     startVideo() {
-        this.sendCommand("START")
+        this.sendCommand("STARTVIDEO")
+    }
+
+    triggerEnterStartCue() {
+        this.sendCommand("ENTERSTARTCUE")
+    }
+
+    triggerEnterCue() {
+        this.sendCommand("ENTERCUE")
+    }
+
+    triggerExitCue() {
+        this.sendCommand("EXITCUE")
+    }
+
+    triggerDoorOpenCue() {
+        this.sendCommand("DOOROPENCUE")
     }
 
     private onCmd(cmd: string) {
