@@ -15,11 +15,17 @@ class InvalidStateTransitionError extends Error {
 }
 
 export abstract class BaseRoomCoordinator {
+    constructor() {
+        setInterval(this.tick, 500)
+    }
+
     #state = RoomState.NEEDS_RESET
     get state() { return this.#state }
 
     #activeGroup?: Group = undefined
     get activeGroup(): Group | undefined { return this.#activeGroup }
+
+    preventGroupAdvance = false
 
     #changedStateAt: number = Date.now()
     get changedStateAt() { return this.#changedStateAt }
@@ -33,6 +39,8 @@ export abstract class BaseRoomCoordinator {
         }
         return now - this.#roomStartedAt
     }
+
+    get isStalling() { return this.state === RoomState.RUNNING && this.getRoomTimeMs() > this.targetRoomDurationMs }
 
     startRoomTransitionIn(group: Group) {
         if (this.state !== RoomState.READY) {
@@ -48,6 +56,7 @@ export abstract class BaseRoomCoordinator {
         }
         this.#state = RoomState.RUNNING
         this.#changedStateAt = Date.now()
+        this.#roomStartedAt = this.changedStateAt
     }
     startRoomTransitionOut(): void {
         if (this.state !== RoomState.RUNNING) {
@@ -63,6 +72,7 @@ export abstract class BaseRoomCoordinator {
         this.#state = RoomState.NEEDS_RESET
         this.#changedStateAt = Date.now()
         this.#activeGroup = undefined
+        this.#roomStartedAt = -1
     }
     markRoomReset() {
         if (this.state !== RoomState.NEEDS_RESET) {
@@ -92,6 +102,10 @@ export abstract class BaseRoomCoordinator {
         if (this.nextRoom?.willBeReadyIn() === -1) {
             return -1
         }
+        if (this.preventGroupAdvance) {
+            return -1
+        }
+        
         let timeForTransitionIn = 0
         let timeForRunning = 0
         let extraTimeForNextRoom = 0
@@ -126,10 +140,22 @@ export abstract class BaseRoomCoordinator {
             if (timeForReset < 0) { return -1 }
         }
 
-        return  timeForTransitionIn + timeForRunning + extraTimeForNextRoom + timeForTransitionOut + timeForReset
+        return timeForTransitionIn + timeForRunning + extraTimeForNextRoom + timeForTransitionOut + timeForReset
     }
 
     abstract enableAll(): void
     abstract disableAll(): void
+
+    protected tick(): void {
+        if (this.state === RoomState.RUNNING) {
+            if (this.getRoomTimeMs() > this.targetRoomDurationMs) {
+                if (!this.preventGroupAdvance) {
+                    if (this.nextRoom == null || this.nextRoom.state === RoomState.READY) {
+                        this.startRoomTransitionOut()
+                    }
+                }
+            }
+        }
+    }
 
 }

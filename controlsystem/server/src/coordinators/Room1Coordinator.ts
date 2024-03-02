@@ -2,22 +2,20 @@ import { Room2LaserDevice } from "../devices/Room2Laser"
 import { Room2SoundAndLightingDevice } from "../devices/Room2SoundAndLighting"
 import { Group } from "../operations/Group"
 import { BaseRoomCoordinator, RoomState } from "./BaseCoordinator"
-import { Room1 } from "./Room1Coordinator"
 
-class Room2Coordinator extends BaseRoomCoordinator {
+class Room1Coordinator extends BaseRoomCoordinator {
 
     // -- Room Properties --
 
     get targetRoomDurationMs() { return 8 * 60 * 1000 }
     get targetResetDurationMs() { return 2 * 60 * 1000}
     get targetTransitionInDurationMs() { return 30 * 2000 }
-    get previousRoom() { return Room1 }
-    get nextRoom(): BaseRoomCoordinator | undefined { return undefined }
+    get previousRoom() { return undefined }
+    get nextRoom(){ return undefined }
     
     // -- Core Functions --
 
-    override tick(): void {
-        super.tick()
+    tick(): void {
     }
 
     enableAll(): void {
@@ -104,4 +102,4 @@ class Room2Coordinator extends BaseRoomCoordinator {
 
 }
 
-export const Room2 = new Room2Coordinator()
+export const Room1 = new Room1Coordinator()
