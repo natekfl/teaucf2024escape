@@ -1,6 +1,7 @@
 import net from "node:net"
 import { BaseDevice } from "./BaseDevice"
 import { UnknownDevice } from "./UnknownDevice"
+import { Room1 } from "../coordinators/Room1Coordinator"
 
 export declare interface Room1ProjectorDevice {
     on(event: 'cmd', listener: (cmd: string) => void): this
@@ -19,6 +20,7 @@ export class Room1ProjectorDevice extends BaseDevice {
             this.#device.destroySocket()
         }
         this.#device = new Room1ProjectorDevice(dev.detachSocket())
+        Room1.relinkProjectorDevice()
     }
     // ---------- //
 

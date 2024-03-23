@@ -32,7 +32,39 @@ export class Room5ProjectorDevice extends BaseDevice {
     get videoTimestamp() { return this.#videoTimestamp }
 
     startVideo() {
-        this.sendCommand("START")
+        this.sendCommand("STARTVIDEO")
+    }
+
+    triggerEnterStartCue() {
+        this.sendCommand("ENTERSTARTCUE")
+    }
+
+    triggerEnterCue() {
+        this.sendCommand("ENTERCUE")
+    }
+
+    triggerExitCue() {
+        this.sendCommand("EXITCUE")
+    }
+
+    triggerDestructionStage1Cue() {
+        this.sendCommand("DESTRUCTION1CUE")
+    }
+
+    triggerDestructionStage2Cue() {
+        this.sendCommand("DESTRUCTION2CUE")
+    }
+    
+    triggerDestructionStage3Cue() {
+        this.sendCommand("DESTRUCTION3CUE")
+    }
+
+    triggerDestructionStage4Cue() {
+        this.sendCommand("DESTRUCTION4CUE")
+    }
+
+    triggerDoorOpenCue() {
+        this.sendCommand("DOOROPENCUE")
     }
 
     private onCmd(cmd: string) {

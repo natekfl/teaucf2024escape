@@ -11,6 +11,8 @@ export abstract class BaseDevice extends EventEmitter {
     private socket: net.Socket
     private buf = ''
 
+    get connected() { return !this.socket.closed }
+
     #enabled = false
     get enabled() { return this.#enabled }
 
@@ -18,10 +20,12 @@ export abstract class BaseDevice extends EventEmitter {
         super()
         this.socket = socket
         this.socket.on('close', () => this.onClose())
+        this.socket.on('error', () => this.onClose())
         this.socket.on('data', (d) => this.onData(d))
     }
 
     private onClose() {
+        console.log(this.constructor.name, "closed")
         this.destroySocket()
     }
 
@@ -42,6 +46,9 @@ export abstract class BaseDevice extends EventEmitter {
     }
 
     private onReceiveCommand(cmd: string) {
+        if (cmd === "PING") {
+            this.sendCommand("PONG")
+        }
         this.emit("cmd", cmd)
     }
 
@@ -80,6 +87,7 @@ export abstract class BaseDevice extends EventEmitter {
     detachSocket(): net.Socket {
         this.socket.removeAllListeners('close')
         this.socket.removeAllListeners('data')
+        this.socket.removeAllListeners('error')
         this.emit("socketDetached")
         return this.socket
     }

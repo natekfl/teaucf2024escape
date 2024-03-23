@@ -16,7 +16,7 @@ class InvalidStateTransitionError extends Error {
 
 export abstract class BaseRoomCoordinator {
     constructor() {
-        setInterval(this.tick, 500)
+        setInterval(() => this.tick(), 500)
     }
 
     #state = RoomState.NEEDS_RESET
@@ -57,13 +57,15 @@ export abstract class BaseRoomCoordinator {
         this.#state = RoomState.RUNNING
         this.#changedStateAt = Date.now()
         this.#roomStartedAt = this.changedStateAt
+        this.previousRoom?.endRoom()
     }
     startRoomTransitionOut(): void {
-        if (this.state !== RoomState.RUNNING) {
+        if (this.state !== RoomState.RUNNING || this.activeGroup == null) {
             throw new InvalidStateTransitionError()
         }
         this.#state = RoomState.TRANSITION_OUT
         this.#changedStateAt = Date.now()
+        this.nextRoom?.startRoomTransitionIn(this.activeGroup)
     }
     endRoom() {
         if (this.state !== RoomState.TRANSITION_OUT) {
@@ -143,12 +145,14 @@ export abstract class BaseRoomCoordinator {
         return timeForTransitionIn + timeForRunning + extraTimeForNextRoom + timeForTransitionOut + timeForReset
     }
 
+    abstract allPuzzlesSolved(): boolean
+
     abstract enableAll(): void
     abstract disableAll(): void
 
     protected tick(): void {
         if (this.state === RoomState.RUNNING) {
-            if (this.getRoomTimeMs() > this.targetRoomDurationMs) {
+            if (this.getRoomTimeMs() > this.targetRoomDurationMs || this.allPuzzlesSolved()) {
                 if (!this.preventGroupAdvance) {
                     if (this.nextRoom == null || this.nextRoom.state === RoomState.READY) {
                         this.startRoomTransitionOut()

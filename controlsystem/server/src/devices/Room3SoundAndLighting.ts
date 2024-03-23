@@ -38,10 +38,6 @@ export class Room3SoundAndLightingDevice extends BaseDevice {
         this.sendCommand("EXITCUE")
     }
 
-    triggerBoxesSolvedCue() {
-        this.sendCommand("BOXESSOLVEDCUE")
-    }
-
     triggerSimonSolvedCue() {
         this.sendCommand("SIMONSOLVEDCUE")
     }

@@ -54,6 +54,10 @@ export class Room5LightingDevice extends BaseDevice {
         this.sendCommand("DESTRUCTION4CUE")
     }
 
+    triggerDoorOpenCue() {
+        this.sendCommand("DOOROPENCUE")
+    }
+
     private onCmd(_cmd: string) {}
 
     private onPropertyUpdate(_key: string, _value: string) {}

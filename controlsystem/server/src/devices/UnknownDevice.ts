@@ -4,11 +4,9 @@ import { Room2LaserDevice } from "./Room2Laser";
 import { Room1LightingDevice } from "./Room1Lighting";
 import { Room1ProjectorDevice } from "./Room1Projector";
 import { Room2SoundAndLightingDevice } from "./Room2SoundAndLighting";
-import { Room3BoxesDevice } from "./Room3Boxes";
 import { Room3SimonDevice } from "./Room3Simon";
 import { Room3SoundAndLightingDevice } from "./Room3SoundAndLighting";
 import { Room4HandDevice } from "./Room4Hand";
-import { Room4Lasers } from "./Room4Lasers";
 import { Room4PedistalDevice } from "./Room4Pedistal";
 import { Room4SoundAndLightingDevice } from "./Room4SoundAndLighting";
 import { Room4TileFloor } from "./Room4TileFloor";
@@ -42,7 +40,6 @@ export class UnknownDevice extends BaseDevice {
             "R1PROJECTOR": Room1ProjectorDevice,
             "R2LASER": Room2LaserDevice,
             "R2SAL": Room2SoundAndLightingDevice,
-            "R3BOXES": Room3BoxesDevice,
             "R3SIMON": Room3SimonDevice,
             "R3SAL": Room3SoundAndLightingDevice,
             "R4HAND0": { assignDevice(dev: UnknownDevice) { Room4HandDevice.assignDevice(dev, 0) } },
@@ -51,7 +48,6 @@ export class UnknownDevice extends BaseDevice {
             "R4HAND3": { assignDevice(dev: UnknownDevice) { Room4HandDevice.assignDevice(dev, 3) } },
             "R4HAND4": { assignDevice(dev: UnknownDevice) { Room4HandDevice.assignDevice(dev, 4) } },
             "R4HAND5": { assignDevice(dev: UnknownDevice) { Room4HandDevice.assignDevice(dev, 5) } },
-            "R4LASERS": Room4Lasers,
             "R4PEDISTAL": Room4PedistalDevice,
             "R4SAL": Room4SoundAndLightingDevice,
             "R4TILEFLOOR": Room4TileFloor,

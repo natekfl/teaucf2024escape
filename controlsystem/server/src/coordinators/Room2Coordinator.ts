@@ -9,15 +9,18 @@ class Room2Coordinator extends BaseRoomCoordinator {
     // -- Room Properties --
 
     get targetRoomDurationMs() { return 8 * 60 * 1000 }
-    get targetResetDurationMs() { return 2 * 60 * 1000}
+    get targetResetDurationMs() { return 2 * 60 * 1000 }
     get targetTransitionInDurationMs() { return 30 * 2000 }
-    get previousRoom() { return Room1 }
-    get nextRoom(): BaseRoomCoordinator | undefined { return undefined }
-    
+    get previousRoom(): BaseRoomCoordinator { return Room1 }
+    get nextRoom() { return undefined }
+
     // -- Core Functions --
 
     override tick(): void {
         super.tick()
+        if (this.allPuzzlesSolved() && this.activeGroup?.room2.finishedAt == null) {
+            this.activeGroup!.room2.finishedAt = Date.now()
+        }
     }
 
     enableAll(): void {
@@ -51,6 +54,11 @@ class Room2Coordinator extends BaseRoomCoordinator {
     override endRoom(): void {
         super.endRoom()
         this.disableAll()
+    }
+
+    override allPuzzlesSolved(): boolean {
+        return this.activeGroup?.room2.laserPuzzleFinishedAt != null &&
+            this.activeGroup?.room2.sundialPuzzleFinishedAt != null
     }
 
     // -- Puzzle Solved Markers --
@@ -100,7 +108,7 @@ class Room2Coordinator extends BaseRoomCoordinator {
         }
     }
 
-    
+
 
 }
 

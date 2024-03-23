@@ -38,18 +38,6 @@ export class Room4SoundAndLightingDevice extends BaseDevice {
         this.sendCommand("EXITCUE")
     }
 
-    triggerLasersOnCue() {
-        this.sendCommand("LASERSONCUE")
-    }
-
-    triggerLaserBrokenCue() {
-        this.sendCommand("LASERBROKENCUE")
-    }
-
-    triggerLasersSolvedCue() {
-        this.sendCommand("LASERSSOLVEDCUE")
-    }
-
     triggerTilesSolvedCue() {
         this.sendCommand("TILESSOLVEDCUE")
     }
