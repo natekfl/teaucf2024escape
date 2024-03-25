@@ -19,12 +19,16 @@ public:
 
 private:
     static const char *identName;
+    static bool hasIdented;
+    static unsigned long lastAttemptedConnectionAt;
     static char packetBuffer[MAX_PACKET_BUFFER];
     static int packetBufferIdx;
 
     static void initCommstream();
+    static bool isCommstreamReady();
     static void readCommstreamIntoBuffer();
     static void writeToCommstream(char *data);
+
     static void processPacketsFromBuffer();
 
     static void processPacket(const char *packet);

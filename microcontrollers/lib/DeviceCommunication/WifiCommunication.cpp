@@ -17,7 +17,7 @@
 #error WIFI_SSID not defined
 #endif
 #ifndef WIFI_PASS
-#error WIFI_COMM_HOST not defined
+#error WIFI_SSID not defined
 #endif
 
 namespace WifiCommunication
@@ -29,22 +29,20 @@ using namespace WifiCommunication;
 void DeviceCommunication::initCommstream()
 {
     WiFi.mode(WIFI_STA);
+    WiFi.setHostname(DeviceCommunication::identName);
     WiFi.begin(WIFI_SSID, WIFI_PASS);
-    while (WiFi.status() != WL_CONNECTED)
-    {
-    }
-    while (!client.connect(WIFI_COMM_HOST, WIFI_COMM_PORT))
-    {
-    }
-    while (!client.connected())
-    {
-    }
-    sendProperty("IDENT", identName);
+    client.connect(WIFI_COMM_HOST, WIFI_COMM_PORT);
+}
+
+bool DeviceCommunication::isCommstreamReady()
+{
+    return WiFi.status() == WL_CONNECTED && client.connected();
 }
 
 void DeviceCommunication::readCommstreamIntoBuffer()
 {
-    while (!client.connected()) {
+    while (!client.connected())
+    {
         initCommstream();
     }
     while (client.available() > 0)
@@ -56,7 +54,8 @@ void DeviceCommunication::readCommstreamIntoBuffer()
 
 void DeviceCommunication::writeToCommstream(char *data)
 {
-    while (!client.connected()) {
+    while (!client.connected())
+    {
         initCommstream();
     }
     client.print(data);

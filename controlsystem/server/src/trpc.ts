@@ -83,6 +83,12 @@ const appRouter = router({
                         enabled: Room4PedistalDevice.device?.enabled,
                         state: Room4PedistalDevice.device?.state
                     },
+                    tileFloor: {
+                        connected: Room4TileFloor.device?.connected ?? false,
+                        enabled: Room4TileFloor.device?.enabled,
+                        solved: Room4TileFloor.device?.solved,
+                        overridden: Room4TileFloor.device?.overridden,
+                    }
                 },
                 room5: {
                     lighting: {
@@ -303,6 +309,10 @@ const appRouter = router({
             .mutation(async () => {
                 Room4SoundAndLightingDevice.device?.triggerTilesNote4Cue()
             }),
+        triggerTilesNote5Cue: publicProcedure
+            .mutation(async () => {
+                Room4SoundAndLightingDevice.device?.triggerTilesNote5Cue()
+            }),
         triggerHandFailedCue: publicProcedure
             .mutation(async () => {
                 Room4SoundAndLightingDevice.device?.triggerHandFailedCue()
@@ -336,7 +346,20 @@ const appRouter = router({
             }),
     }),
 
-    room4Hand: router({}),
+    room4Hand: router({
+        setEnabled: publicProcedure
+            .input(z.object({ enabled: z.boolean(), idx: z.number().int().gte(0).lte(6) }))
+            .mutation(async (opts) => {
+                const { input } = opts
+                Room4HandDevice.devices[input.idx]?.setEnabled(input.enabled)
+            }),
+        stab: publicProcedure
+            .input(z.object({ idx: z.number().int().gte(0).lte(6) }))
+            .mutation(async (opts) => {
+                const { input } = opts
+                Room4HandDevice.devices[input.idx]?.stab()
+            }),
+    }),
 
     room4Pedistal: router({
         setEnabled: publicProcedure

@@ -5,10 +5,11 @@
 void DeviceCommunication::initCommstream()
 {
     Serial.begin(115200);
-    while (!Serial)
-    {
-    } // wait for serial port to connect. Needed for native USB
-    sendProperty("IDENT", identName);
+}
+
+bool DeviceCommunication::isCommstreamReady()
+{
+    return Serial == true;
 }
 
 void DeviceCommunication::readCommstreamIntoBuffer()

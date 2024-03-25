@@ -62,6 +62,10 @@ export class Room4SoundAndLightingDevice extends BaseDevice {
         this.sendCommand("TILESNOTE4CUE")
     }
 
+    triggerTilesNote5Cue() {
+        this.sendCommand("TILESNOTE5CUE")
+    }
+
     triggerHandFailedCue() {
         this.sendCommand("HANDFAILEDCUE")
     }

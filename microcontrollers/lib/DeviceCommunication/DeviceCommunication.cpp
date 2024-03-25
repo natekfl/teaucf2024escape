@@ -8,6 +8,8 @@
 #endif
 
 const char *DeviceCommunication::identName;
+bool DeviceCommunication::hasIdented = false;
+unsigned long DeviceCommunication::lastAttemptedConnectionAt;
 char DeviceCommunication::packetBuffer[MAX_PACKET_BUFFER];
 int DeviceCommunication::packetBufferIdx = 0;
 DeviceCommunication::CommandCallback *DeviceCommunication::commandCallbacks[MAX_CALLBACKS];
@@ -21,8 +23,23 @@ void DeviceCommunication::init(const char *ident)
 
 void DeviceCommunication::tick()
 {
-    readCommstreamIntoBuffer();
-    processPacketsFromBuffer();
+    if (!isCommstreamReady())
+    {
+        hasIdented = false;
+        if (millis() - lastAttemptedConnectionAt > 8000)
+        {
+            lastAttemptedConnectionAt = millis();
+            initCommstream();
+        }
+    }
+    else
+    {
+        if (!hasIdented) {
+            sendProperty("IDENT", identName);
+        }
+        readCommstreamIntoBuffer();
+        processPacketsFromBuffer();
+    }
 }
 
 void DeviceCommunication::processPacketsFromBuffer()

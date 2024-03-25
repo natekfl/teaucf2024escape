@@ -10,7 +10,7 @@ void setup()
     DeviceCommunication::init("ROOM2LASER");
     Properties::init();
 
-    pinMode(LED_BUILTIN, OUTPUT);   
+    pinMode(LED_BUILTIN, OUTPUT); 
 }
 
 void loop()
